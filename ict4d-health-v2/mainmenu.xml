@@ -1,0 +1,66 @@
+<vxml version="2.1">
+<meta name="maintainer" content="filip.dbrsk@gmail.com"/>
+<form id="MainMenu">
+<field name="Language">
+<prompt bargeintype="hotword" timeout="3s">
+Welcome to the ICT4D Health Main Menu for the central area of Burkina Faso. Please choose your language. Say one for English, two for French.
+</prompt>
+<!--
+ Grammar for available responses for English or French.
+-->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "english" to -->
+<!--  the Language variable.  -->
+<item>
+<one-of>
+<item>one</item>
+<item>English</item>
+<item>E N</item>
+<item>England</item>
+</one-of>
+<tag>out.Language="english";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "french" to -->
+<!--  the Language variable.  -->
+<item>
+<one-of>
+<item>two</item>
+<item>deux</item>
+<item>French</item>
+<item>France</item>
+<item>F R</item>
+</one-of>
+<tag>out.Language="french";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+<!--  If no input is heard. -->
+<noinput>
+<prompt bargeintype="hotword" timeout="3s">I did not hear anything. Please try again.</prompt>
+<reprompt/>
+</noinput>
+<!--  If the entered choice is not recognized. -->
+<nomatch>
+<prompt bargein="hotword" timeout="3s">I did not recognize that choice. Please try again.</prompt>
+<reprompt/>
+</nomatch>
+</field>
+<!--
+If a valid choice is entered, let the user know it is understood and store the variable value to Language. Then, redirect to the emergency menu. 
+-->
+<filled>
+<assign name="session.MyLang" expr="Language"/>
+<if cond="Language == 'english'">
+<goto next="http://webhosting.voxeo.net/187944/www/ict4d-health-v2/emergency_en.xml"/>
+<elseif cond="Language == 'french'"/>
+<assign name="MyLang" expr="'french'"/>
+<goto next="http://webhosting.voxeo.net/187944/www/ict4d-health-v2/emergency_fr.xml"/>
+</if>
+</filled>
+</form>
+</vxml>

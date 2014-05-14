@@ -1,0 +1,774 @@
+<vxml version="2.1" application="http://webhosting.voxeo.net/187944/www/medical.xml">
+<meta name="maintainer" content="filip.dbrsk@gmail.com"/>
+<form id="EmergencyMenu">
+<field name="EmLevel">
+<prompt bargeintype="hotword" timeout="3s">
+You have chosen English. Welcome to the emergency menu in English. Do you need a doctor immediately?
+</prompt>
+<!--
+ Grammar for available responses for either "high" or "low" emergency.
+-->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "high" to 
+-->
+<!--  the EmLevel variable.  -->
+<item>
+<one-of>
+<item>yes</item>
+<item>oui</item>
+</one-of>
+<tag>out.EmLevel="high";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "low" to 
+-->
+<!--  the EmLevel variable.  -->
+<item>
+<one-of>
+<item>no</item>
+</one-of>
+<tag>out.EmLevel ="low";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+<!--  if no input. -->
+<noinput>
+<prompt bargeintype="hotword" timeout="3s">I did not hear anything. Please try again.</prompt>
+<reprompt/>
+</noinput>
+<!--  if not understood input. -->
+<nomatch>
+<prompt bargeintype="hotword" timeout="3s">
+I did not recognize that emergency choice. Please try again.
+</prompt>
+<reprompt/>
+</nomatch>
+</field>
+<!--
+ if input is ok, redirect to the 'high' or the 'low' emergency menu.
+-->
+<filled>
+<if cond="EmLevel == 'high'">
+<goto next="#High"/>
+<elseif cond="EmLevel == 'low'"/>
+<goto next="#CareOrInfo"/>
+</if>
+</filled>
+</form>
+<!--
+ If the answer was "high", just connect to a local doctor. 
+-->
+<form id="High">
+<block>
+<prompt bargein="false">
+Your emergency level is high. You will now be connected to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso.
+</prompt>
+<audio src="http://webhosting.voxeo.net/187944/www/recordings/groovy.wav"/>
+</block>
+<filled>
+<!--  This will never get hit. -->
+</filled>
+</form>
+<!--
+ If the answer was "low", user is redirected to a menu to be asked whether he wants instructions or general epidemic information. 
+-->
+<form id="CareOrInfo">
+<field name="CareInfo">
+<prompt bargeintype="hotword" timeout="3s">
+Would you like to receive treatment instructions or general epidemics information? Choose between instructions or information.
+</prompt>
+<!--
+ Grammar for available responses for either "instructions" or "information".
+-->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "instructions" to 
+-->
+<!--  the CareInfo variable.  -->
+<item>
+<one-of>
+<item>instructions</item>
+</one-of>
+<tag>out.CareInfo="instructions";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "information" to 
+-->
+<!--  the CareInfo variable.  -->
+<item>
+<one-of>
+<item>information</item>
+</one-of>
+<tag>out.CareInfo="information";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+<!--  if no input. -->
+<noinput>
+<prompt bargeintype="hotword" timeout="3s">I did not hear anything. Please try again.</prompt>
+<reprompt/>
+</noinput>
+<!--  if no input match to the available options. -->
+<nomatch>
+<prompt bargeintype="hotword" timeout="3s">
+I did not recognize that emergency choice. Please try again.
+</prompt>
+<reprompt/>
+</nomatch>
+</field>
+<!--
+ if input is correct, redirect to the instructions/information menu.
+-->
+<filled>
+<if cond="CareInfo == 'instructions'">
+<goto next="#Instruct"/>
+<elseif cond="CareInfo== 'information'"/>
+<goto next="#Info"/>
+</if>
+</filled>
+</form>
+<!--
+ If the answer was "instructions", start iterating the disease menu. 
+-->
+<form id="Instruct">
+<field name="Category">
+<prompt bargeintype="hotword" timeout="3s">
+Your emergency level is low. Please identify your disease or injury. Say one for yellow fever, two for hepatitis A, three for hepatitis B, four for malaria, five for meninghitis, six for rabies, seven for HIV AIDS, eight for diarrhea, nine for wrist pain, ten for bleeding and eleven for dislocation. In case your disease or injury is specific and can not be categorized in the mentioned categories, please say doctor to be connected to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso.
+</prompt>
+</field>
+<!--
+ Grammar for available responses for the disease categories.
+-->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "fever" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>fever</item>
+<item>yellow</item>
+<item>one</item>
+</one-of>
+<tag>out.Category="fever";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "hepa" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>hepatitis a</item>
+<item>two</item>
+</one-of>
+<tag>out.Category="hepa";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "hepb" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>hepatitis b</item>
+<item>three</item>
+</one-of>
+<tag>out.Category="hepb";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "malaria" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>malaria</item>
+<item>four</item>
+</one-of>
+<tag>out.Category="malaria";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "meningitis" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>meningitis</item>
+<item>five</item>
+</one-of>
+<tag>out.Category="meningitis";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "rabies" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>rabies</item>
+<item>six</item>
+</one-of>
+<tag>out.Category="rabies";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "aids" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>aids</item>
+<item>hiv</item>
+<item>a i d s</item>
+<item>h i v </item>
+<item>seven</item>
+</one-of>
+<tag>out.Category="aids";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "diarrhea" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>diarrhea</item>
+<item>eight</item>
+</one-of>
+<tag>out.Category="diarrhea";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "wrist" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>nine</item>
+<item>wrist</item>
+<item>pain</item>
+</one-of>
+<tag>out.Category="wrist";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "bleeding" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>bleeding</item>
+<item>ten</item>
+</one-of>
+<tag>out.Category="bleeding";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "disloc" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>eleven</item>
+<item>dislocation</item>
+</one-of>
+<tag>out.Category="disloc";</tag>
+</item>
+
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Category variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Category="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+<!--  if no input. -->
+<noinput>
+<prompt bargeintype="hotword" timeout="3s">I did not hear anything. Please try again.</prompt>
+<reprompt/>
+</noinput>
+<!--  if no input match. -->
+<nomatch>
+<prompt bargeintype="hotword" timeout="3s">
+I did not recognize that emergency choice. Please try again.
+</prompt>
+<reprompt/>
+</nomatch>
+<!--
+ if input is correct, redirect to the specific disease or to a doctor.
+-->
+<filled>
+<if cond="Category == 'fever'">
+<goto next="#Fever"/>
+<elseif cond="Category== 'hepa'"/>
+<goto next="#Hepa"/>
+<elseif cond="Category== 'hepb'"/>
+<goto next="#Hepb"/>
+<elseif cond="Category== 'malaria'"/>
+<goto next="#Malaria"/>
+<elseif cond="Category== 'meningitis'"/>
+<goto next="#Meningitis"/>
+<elseif cond="Category== 'rabies'"/>
+<goto next="#Rabies"/>
+<elseif cond="Category== 'aids'"/>
+<goto next="#Aids"/>
+<elseif cond="Category== 'diarrhea'"/>
+<goto next="#Diarrhea"/>
+<elseif cond="Category== 'wrist'"/>
+<goto next="#Wrist"/>
+<elseif cond="Category== 'bleeding'"/>
+<goto next="#Bleeding"/>
+<elseif cond="Category== 'disloc'"/>
+<goto next="#Disloc"/>
+<elseif cond="Category== 'doctor'"/>
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "fever", it gives this advice.  -->
+<form id="Fever">
+<field name="Fever">
+<prompt bargein="false" timeout="3s">
+Yellow fever is caused by a virus that is spread by the Aedes aegypti mosquito and transmitted between monkeys, humans or both.The disease has 2 phases. The acute phase has the symptoms: fever, headache, muscle aches, nausea, vomiting, loss of appetite, dizziness, and red eyes, face or tongue.The toxic phase has these symptoms: yellowing of skin and whites of the eyes, abdominal pain and vomiting, decreased urination, bleeding from  nose, mouth and eyes, heart dysfunction, liver and kidney failure, brain dysfunction. Treatment consists of hospital care. Prevention is done by vaccination and avoiding mosquitoes. Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Fever variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Fever="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if user said doctor, go to the doctor form. -->
+<filled>
+<if cond="Fever== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--
+ If the answer was "hepatitis a", it gives hepatitis A instructions. 
+-->
+<form id="Hepa">
+<field name="Hepa">
+<prompt bargein="false" timeout="3s">
+Hepatitis A is a highly contagious liver infection caused by the hepatitis A virus which affects the liver's ability to function. Main symptoms are: fatigue, nausea and vomiting, abdominal pain or discomfort, loss of appetite, low-grade fever, dark urine, muscle pain, yellowing of the skin and eyes. Treatment consists of: getting good rest and multiple meals per day, as well as reconsidering the medications to take. The hepatitis A vaccine and good hygiene are the recommended preventions. Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Hepa variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Hepa="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if input doctor, go to the doctor form. -->
+<filled>
+<if cond="Hepa== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "hepb", it gives hepatitis b advices.  -->
+<form id="Hepb">
+<field name="Hepb">
+<prompt bargeintype="hotword" timeout="3s">
+Hepatitis B is a serious liver infection, leading to liver failure, liver cancer or cirrhosis. Usual symptoms are: abdominal pain, dark urine, fever, joint pain, loss of appetite, nausea and vomiting, weakness and fatigue, yellowing of skin and the whites of the eyes.  Currently, no cure exists for hepatitis B. However, you should contact a doctor to get the right treatment, depending on the state of the virus. This disease can be prevented by hepatitis B vaccine and being cautious when it comes to: sex, drugs, tattoos and piercing. Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Hepb variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Hepb="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if input doctor, go to the doctor form. -->
+<filled>
+<if cond="Hepb== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "malaria", it gives malaria advices.  -->
+<form id="Malaria">
+<field name="Malaria">
+<prompt bargeintype="hotword" timeout="3s">
+Malaria is a disease caused by a parasite, transmitted by the bite of infected mosquitoes and kills around 1 million people each year worldwide. Characteristic symptoms of malaria are: shaking chills, high fever, profuse sweating, headache, vomiting and diarrhea. The most common antimalarial drugs include: chloroquine, quinine sulfate, hydroxychloroquine, mefloquine and malarone. There is still no approved malaria vaccine yet, so it is important to reduce exposure to mosquitoes. Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Malaria variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Malaria="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if input doctor, go to the doctor form. -->
+<filled>
+<if cond="Malaria== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "meningitis", it gives meningitis advices.  -->
+<form id="Meningitis">
+<field name="Meningitis">
+<prompt bargeintype="hotword" timeout="3s">
+Meningitis is an inflammation of the membranes surrounding the brain and the spinal cord. The signs and symptoms that may occur in anyone older than age of 2 include: sudden high fever, severe headache, stiff neck, vomiting or nausea with headache, confusion or difficulty concentrating, seizures, sleepiness or difficulty waking up, sensitivity to light and lack of interest in drinking and eating. Newborns have slightly different symptoms. The treatment depends on the type of meningitis: bacterial is cured with antibiotics, viral is cured with rest and fluids, and so on. To prevent meningitis: practice good hygiene, stay healthy and always cover your mouth. Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Meningitis variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Meningitis="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if input doctor, go to the doctor form. -->
+<filled>
+<if cond="Meningitis== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "rabies", it gives meningitis advices.  -->
+<form id="Rabies">
+<field name="Rabies">
+<prompt bargeintype="hotword" timeout="3s">
+Rabies is a deadly virus spread to people from the saliva of infected animals. Usual symptoms are: fever, headache, nausea, vomiting, agitation, anxiety, confusion, hyperactivity, difficulty swallowing, excessive salivation, hallucinations, insomnia and partial paralysis. Although there are ways to determine whether the animal that bit you has rabies, the safest option is to consult a doctor immediately. To prevent rabies, vaccinate your pets and keep them from predators, vaccinate yourself if travelling and dont approach wild animals. Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Rabies variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Rabies="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if input doctor, go to the doctor form. -->
+<filled>
+<if cond="Rabies== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "aids", it gives aids advices.  -->
+<form id="Aids">
+<field name="Aids">
+<prompt bargeintype="hotword" timeout="3s">
+AIDS (acquired immunodeficiency syndrome) is a chronic, potentially life-threatening condition caused by the human immunodeficiency virus HIV. It is a sexually transmitted infection, but iIt can also be spread by contact with infected blood or from mother to child during pregnancy, childbirth or breast-feeding. Key symptoms are: fever, headache, muscle ache, rash, chills, sore throat, mouth or genital ulcers, swollen lymph glands, joint pain, night sweats and diarrhea. There's no cure for this disease, but a variety of drugs can be combined to control the virus. Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Aids variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Aids="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if input doctor, go to the doctor form. -->
+<filled>
+<if cond="Aids== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "diarrhea", it gives aids advices.  -->
+<form id="Diarrhea">
+<field name="Diarrhea">
+<prompt bargeintype="hotword" timeout="3s">
+Diarrhea describes loose, watery stools that occur more frequently than usual. Diarrhea is something everyone experiences. In most cases, diarrhea signs and symptoms usually last a couple of days. But sometimes diarrhea can last for weeks. In these situations, diarrhea can be a sign of a serious disorder, such as inflammatory bowel disease, or a less serious condition, such as irritable bowel syndrome. Signs and symptoms associated with diarrhea may include: frequent, loose, watery stools, abdominal cramps, abdominal pain, fever, blood in the stool, bloating. The treatment can be medications like antibiotics, drinking liquids like fruit juices for potassium or eating soups for sodium. If diarrhea persists beyond two days, please contact the doctor. Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Diarrhea variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Diarrhea="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if input doctor, go to the doctor form. -->
+<filled>
+<if cond="Diarrhea== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "wrist", it gives this advice.  -->
+<form id="Wrist">
+<field name="Wrist">
+<prompt bargein="false" timeout="3s">
+Wrist pain is a common complaint. Many types of wrist pain are caused by sudden injuries that result in sprains or fractures. But wrist pain also can be caused by more long-term problems such as repetitive stress, arthritis and carpal tunnel syndrome. The precise location of your wrist pain also can give clues to what might be causing your symptoms. Not all wrist pain requires medical care. Minor sprains and strains, for instance, usually respond to ice, rest and over-the-counter pain medications. But if pain and swelling last longer than a few days or become worse, see your doctor. Delays in diagnosis and treatment can lead to poor healing, reduced range of motion and long-term disability. As treatment, you can take medications such as ibuprofen and acetaminophen, that may help reduce wrist pain. In case there are stronger pains, please contact the doctor.
+Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Wrist variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Wrist="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if user said doctor, go to the doctor form. -->
+<filled>
+<if cond="Wrist== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "bleeding", it gives this advice.  -->
+<form id="Bleeding">
+<field name="Bleeding">
+<prompt bargein="false" timeout="3s">
+Bleeding is the loss of blood and be caused by injuries or may be spontaneous. Bleeding may be: inside the body (internally), outside the body (externally). The symptoms are: confusion or decreasing alertness, clammy skin, dizziness, low blood pressure, paleness, rapid pulse, increased heart rate, shortness of breath, weakness. Seek medical help in the cases in which the bleeding can't be controlled, required the use of a tourniquet, or was caused by a serious injury, the wound might need stitches, gravel or dirt cannot be removed easily with gentle cleaning, you think there may be internal bleeding or shock. The most important step for external bleeding is to apply direct pressure. This will stop most external bleeding. Always wash your hands before (if possible) and after giving first aid to someone who is bleeding. This helps prevent infection. Blood loss can cause blood to collect under the skin, turning it black and blue (bruised). Apply a cool compress to the area as soon as possible to reduce swelling. Wrap the ice in a towel and place the towel over the injury. Do not place ice directly on the skin.
+Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the Bleeding variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Bleeding="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if user said doctor, go to the doctor form. -->
+<filled>
+<if cond="Bleeding== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--  If the answer was "disloc", it gives this advice.  -->
+<form id="Disloc">
+<field name="Disloc">
+<prompt bargein="false" timeout="3s">
+Dislocation is an injury to a joint, a place where two or more of your bones come together, in which the ends of your bones are forced from their normal positions. This painful injury temporarily deforms and immobilizes your joint. Dislocation is most common in the shoulders and fingers. Other sites for dislocations include the elbows, knees and hips. If you suspect a dislocation, seek prompt medical attention to return your bones to their proper positions. A dislocated joint may be: visibly deformed or out of place, swollen or discolored, intensely painful, immovable. Treatment of the dislocation depends on the site and severity of your injury and may include: reduction, immobilization, surgery, rehabilitation.
+Please say doctor to connect to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso and ask more questions.
+</prompt>
+<!--  Grammar for response for doctor. -->
+<grammar xml:lang="en-US" root="MEATPLANT">
+<rule id="MEATPLANT" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "doctor" to 
+-->
+<!--  the disloc variable.  -->
+<item>
+<one-of>
+<item>doctor</item>
+<item>medic</item>
+</one-of>
+<tag>out.Disloc="doctor";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+</field>
+<!--  if user said doctor, go to the doctor form. -->
+<filled>
+<if cond="Disloc== 'doctor'">
+<goto next="#Doctor"/>
+</if>
+</filled>
+</form>
+<!--
+ If the answer was "doctor", user gets connected to a local doctor. 
+-->
+<form id="Doctor">
+<block>
+<prompt bargein="false">
+Dear user, please hold on. You will now be connected to a local doctor from the hospital Clinique St. Leopold in Bobo-Dioulasso.
+</prompt>
+<audio src="http://webhosting.voxeo.net/187944/www/recordings/groovy.wav"/>
+</block>
+<filled>
+<!--  This will never get hit. -->
+</filled>
+</form>
+<!--
+ If the answer was "information", it gives local information on epidemics. 
+-->
+<form id="Info">
+<block>
+<prompt bargeintype="hotword" timeout="3s">
+You have no emergency. Following is an information about the current epidemic in the Central area of Burkina Faso and advices on prevention.
+News for the center: There is meningitis epidemics. A total of 714 people have died since 1 January out of 7,184 cases. Best prevention for this epidemics is to ensure you have been vaccinated.
+</prompt>
+</block>
+<field name="ConsDoctor">
+<prompt bargeintype="hotword" timeout="3s">
+Would you like to connect to a doctor to ask further questions?
+</prompt>
+<!--
+ Grammar for available responses for consultant doctor.
+-->
+<grammar xml:lang="en-US" root="SomeRoot">
+<rule id="SomeRoot" scope="public">
+<one-of>
+<!--
+ If the user says any of the following choices, then the grammar assigns "yes" to 
+-->
+<!--  the ConsDoctor variable.  -->
+<item>
+<one-of>
+<item>yes</item>
+<item>oui</item>
+</one-of>
+<tag>out.ConsDoctor="yes";</tag>
+</item>
+<!--
+ If the user says any of the following choices, then the grammar assigns "no" to 
+-->
+<!--  the Consult variable.  -->
+<item>
+<one-of>
+<item>no</item>
+</one-of>
+<tag>out.ConsDoctor="no";</tag>
+</item>
+</one-of>
+</rule>
+</grammar>
+<!--  if no input. -->
+<noinput>
+<prompt bargeintype="hotword" timeout="3s">I did not hear anything. Please try again.</prompt>
+<reprompt/>
+</noinput>
+<!--  if no input is matched. -->
+<nomatch>
+<prompt bargeintype="hotword" timeout="3s">I did not recognize that choice. Please try again.</prompt>
+<reprompt/>
+</nomatch>
+</field>
+<!--  if input is entered, assess it. -->
+<filled>
+<if cond="ConsDoctor== 'yes'">
+<prompt bargein="false">
+Please be patient for a few moments while we connect you to a consultant doctor.
+</prompt>
+<audio src="http://webhosting.voxeo.net/187944/www/recordings/groovy.wav"/>
+<elseif cond="ConsDoctor == 'no'"/>
+<prompt bargein="false">Thank you and goodbye!</prompt>
+</if>
+</filled>
+</form>
+</vxml>
